@@ -1,0 +1,23 @@
+{
+  "name": "KKO",
+  "version": "0.1",
+  "authors": [
+    "nekoromancer <nekonitrate@gmail.com>"
+  ],
+  "description": "Kakao Talk, Kakao Story API Library",
+  "main": "kko.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "KakaoTalk",
+    "kakaoStory",
+    "Daum",
+    "Kakao"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "web2app": "~1.0.4"
+  }
+}
