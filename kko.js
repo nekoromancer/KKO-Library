@@ -133,6 +133,12 @@
 			});
 		};
 
+		app.logout = function(successCallback) {
+			Kakao.Auth.logout(function (res) {
+				successCallback.call(null, res);
+			});
+		};
+
 		// 정보 얻기
 		app.getInfo = {
 			/**
@@ -282,7 +288,7 @@
 				url = encodeURIComponent(url);
 				width = width || 400;
 				height = height || 480;
-
+				
 				linkUrl = linkUrl.replace(/%url/, url);
 
 				window.open(linkUrl, '', 'width=' + width + ',height=' + height);
