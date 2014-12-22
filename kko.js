@@ -293,8 +293,8 @@
 			 *   - 카카오 스토리 앱을 호출 합니다.
 			 *   - 카카오 스토리를 사용할 수 있는 모바일 환경에서만 작동합니다.
 			 *
-			 * @param string appId: 공유하는 모바일 웹 사이트의 루트 주소
-			 * @param string url: 실제 공유 할 url
+			 * @param string appId: 공유하는 모바일 웹 사이트의 루트 주소(필수)
+			 * @param string url: 실제 공유 할 url(필수)
 			 * @param string text: 사용자 입력란에 들어간 임의의 문장
 			 * @param boolean urlFirst: 공유 할 url이 삽입될 위치(기본 false)
 			 *   - true: url + text
