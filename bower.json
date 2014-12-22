@@ -19,5 +19,8 @@
   "dependencies": {
     "web2app": "~1.0.4"
   },
-  "ignore": "lib"
+  "ignore": [
+    "lib",
+    "index.html"
+  ]
 }
