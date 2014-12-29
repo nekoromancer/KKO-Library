@@ -5,7 +5,7 @@
     "nekoromancer <nekonitrate@gmail.com>"
   ],
   "description": "Kakao Talk, Kakao Story API Library",
-  "main": "kko.js",
+  "main": "kko.min.js",
   "moduleType": [
     "globals"
   ],
