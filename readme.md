@@ -7,7 +7,7 @@ KKO-Library
 
 bower를 사용하면 간편하게 설치할 수 있습니다.
 ```
-bower install --save-dev kko
+bower install kko
 ```
 
 혹은 git을 이용하거나,
@@ -88,12 +88,12 @@ params: 다음 항목을 갖는 오브젝트 입니다.
   image: {
     src: 공유할 이미지의 경로,
     width: 공유할 이미지의 폭(70이상, 기본값 300, 단위 px)
-	  height: 공유할 이미지의 높이(70이상, 기본값 400, 단위 px)
-	},
-	webButton: {
-	  text: 공유할 링크 버튼에 출력될 메세지,
-	  url: 공유될 링크 url
-	}
+    height: 공유할 이미지의 높이(70이상, 기본값 400, 단위 px)
+  },
+  webButton: {
+    text: 공유할 링크 버튼에 출력될 메세지,
+    url: 공유될 링크 url
+  }
 }
 ```
 
