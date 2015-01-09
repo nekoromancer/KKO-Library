@@ -1,5 +1,7 @@
 KKO-Library
 ===========
+**Current Version**: v0.2<br />
+**Last Change**: 2015-01-09
 
 간편하게 사용하는 카카오 톡, 스토리 라이브러리 입니다(이하 kko).
 
@@ -262,3 +264,43 @@ Kakao 계정으로 로그인 합니다.
 		kko.story.openApp(appId, url, text, true); 
 	});
 ```
+
+## kko.story.getStory(id, successCallback, failedCallback)
+### Description
+카카오 스토리에서 사용자 스토리(포스팅) 정보를 불러옵니다.
+
+### Parameters
+**id**: 카카오 스토리의 스토리 ID입니다. 특별히 지정하지 않을 경우 모든 스토리 정보를 불러옵니다.<br />
+id를 지정하지 않을 경우 첫번째 파라미터는 성공시 콜백 함수가 됩니다.<br />
+**successCallback**: 스토리 정보 불러오기 성공시 콜백 함수. 스토리 정보가 첫번째 파라미터로 전달됩니다.<br />
+id를 지정하지 않은 경우 두번째 파라미터는 실패시 콜백 함수가 됩니다.<br />
+**failedCallback**: 스토리 정보 불러오기 실패시 콜백 함수.<br />
+id를 지정하지 않은 경우 생략됩니다.
+
+### Example
+```javascript
+  // 하나의 스토리 정보만을 불러오는 경우
+
+  kko.story.getStory('STORY-ID', function (res) {
+    ... do something ...
+  }, function (err) {
+    console.error(err);
+  });
+
+  // 전체 스토리 정보를 불러오는 경우
+
+  kko.story.getStory(function (res) {
+    ... do somthing ...
+  }, function (err) {
+    console.error(err);
+  });
+```
+
+## kko.story.getStoriesBefore(lastId, successCallback, failedCallback)
+### Description
+카카오 스토리에서 지정된 ID(lastId) 이전에 작성된 사용자 스토리(포스팅) 정보를 불러옵니다. 지정된 ID에 해당하는 스토리 정보는 불러오는 데이터에 포함되지 않습니다.
+
+### Parameters
+**lastId**: 카카오 스토리의 스토리 ID입니다. <br />
+**successCallback**: 스토리 정보 불러오기 성공시 콜백 함수. 스토리 정보가 첫번째 파라미터로 전달됩니다. <br />
+**failedCallback**: 스토리 정보 불러오기 실패시 콜백 함수.
