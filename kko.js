@@ -48,7 +48,7 @@
 		  return stripped.join('&');
 		};
 
-		var initialize = function(appId) {
+		var initialize = function (appId) {
 			Kakao.init(appId);
 			$emit(initEvent);
 		};
@@ -133,7 +133,7 @@
 			});
 		};
 
-		app.logout = function(successCallback) {
+		app.logout = function (successCallback) {
 			Kakao.Auth.logout(function (res) {
 				successCallback.call(null, res);
 			});
@@ -166,7 +166,7 @@
 					var user = {};
 					
 					user.id = status.user.id;
-					user.kakaoStoryUser = status.isStoryUser;
+					user.iskakaoStoryUser = status.isStoryUser;
 					
 					if (user.kakaoStoryUser && status.kakaoStoryProfile !== undefined) {
 						user.kakaoStoryProfile = status.kakaoStoryProfile;
@@ -223,7 +223,7 @@
 			 * @param string text: 사용자 입력란에 들어간 내용
 			 * @param function successCallback: 공유 성공시 콜백 함수
 			 *   - 콜백 함수의 첫번째 인수로 링크된 게시물의 상세 정보가 전달됩니다.
-			 * @param function faliedCallback: 공유 실패시 콜백 함수
+			 * @param function failedCallback: 공유 실패시 콜백 함수
 			 *
 			 * @return void
 			 */
@@ -279,11 +279,11 @@
 			 * @param number width: 팝업창의 폭(기본 400, 단위 px)
 			 * @param number height: 팝업창의 높이(기본 480, 단위 px)
 			 *   - 콜백 함수의 첫번째 인수로 링크된 게시물의 상세 정보가 전달됩니다.
-			 * @param function faliedCallback: 공유 실패시 콜백 함수
+			 * @param function failedCallback: 공유 실패시 콜백 함수
 			 *
 			 * @return void
 			 */
-			openSharer: function(url, width, height) {
+			openSharer: function (url, width, height) {
 				var linkUrl = 'https://story.kakao.com/share?url=%url';
 				url = encodeURIComponent(url);
 				width = width || 400;
@@ -308,7 +308,7 @@
 			 *
 			 * @return void
 			 */
-			openApp: function(appId, url, text, urlFirst) {
+			openApp: function (appId, url, text, urlFirst) {
 				var params = {};
 				params.appId = appId;
 		    params.apiver = apiver;
@@ -329,6 +329,94 @@
 			    storeURL : appStoreURL,
 			    appName : 'KakaoStory'
 			  });
+			},
+
+			/**
+			 * @description: 카카오 스토리에서 사용자의 스토리 정보를 불러옵니다.
+			 *   - 첫번째 파라미터에 스토리 ID를 입력하면 해당 스토리 정보를 불러옵니다.
+			 *   - 첫번째 파라미터가 함수인 경우 전체 스토리 정보를 불러옵니다.
+			 *
+			 * @param string or function idOrSuccessCallback: 
+			 *   스토리 ID 혹은 로드 성공시 콜백 함수
+			 * @param function successOrFailed:
+			 *   - 스토리 ID가 있는 경우 성공시 콜백 함수
+			 *   - 스토리 ID를 입력하지 않은 경우 실패시 콜백함수
+			 * @param function or null failedOrNot:
+			 *   - 스토리 ID가 있는 경우 실패시 콜백 함수
+			 *   - 스토리 ID를 입력하지 않은 경우 미사용(null)
+			 *
+			 * @return void or object
+			 */
+			getStory: function (idOrSuccessCallback, successOrFailed, failedOrNot) {
+				var storyId, 
+						successCallback, 
+						failedCallback,
+						params = {};
+
+				if (typeof idOrSuccessCallback === 'function') {
+					// 첫번째 parameter가 function 일 경우
+					successCallback = idOrSuccessCallback;
+					failedCallback = successOrFailed;
+
+					params.url = '/v1/api/story/mystories';
+				} else if(typeof idOrSuccessCallback === 'string') {
+					// 첫번째 parameter가 string(storyId)일 경우
+					storyId = idOrSuccessCallback;
+					successCallback = successOrFailed;
+					failedCallback = failedOrNot;
+
+					params.url = '/v1/api/story/mystory';
+					params.data = {
+						id: storyId
+					};
+				} else {
+					// Error
+					return {
+						error: 'invaild parameters'
+					};
+				}
+
+				Kakao.Auth.login({
+					success: function () {
+						Kakao.API.request(params)
+						.then(function (res) {
+							successCallback.call(null, res);
+						});
+					},
+					fail: function (err) {
+						failedCallback.call(null, err);
+					}
+				});
+			},
+
+			/**
+			 * @description: 카카오 스토리의 특정 아이디 이전의 스토리 정보를 불러옵니다.
+			 *   - 지정된 아이디는 포함되지 않습니다.
+			 *
+			 * @param string lastId: 스토리 ID
+			 * @param function successCallback: 로드 성공시 콜백 함수
+		 	 *   - 콜백 함수의 첫번째 인자로 스토리 정보(배열)이 전달 됩니다.
+		   * @param function failedCallback: 로드 실패시 콜백 함수
+			 *
+			 * @return void
+			 */
+			getStoriesBefore: function (lastId, successCallback, failedCallback) {
+				Kakao.Auth.login({
+					success: function () {
+						Kakao.API.request({
+							url: '/v1/api/story/mystories',
+							data: {
+								last_id: lastId
+							}
+						})
+						.then(function (res) {
+							successCallback.call(null, res);
+						});
+					},
+					fail: function (err) {
+						failedCallback.call(null, err);
+					}
+				});
 			}
 		};
 
