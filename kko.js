@@ -1,47 +1,89 @@
 (function (exports) {
 	'use strict';
-
-	// 브라우저에 CustomEvent 함수가 없을 경우 새로 정의합니다.
+	
+	// CustomEvent 에서 정의한 이벤트를 배열에 저장합니다.
+	var customEvents = [];
+  
+  // 브라우저에 CustomEvent 함수가 없을 경우 새로 정의합니다.
 	if (typeof window.CustomEvent !== 'function') {
-	  window.CustomEvent = function(type, eventInitDict) {
-	    var newEvent = document.createEvent('CustomEvent');
-	    newEvent.initCustomEvent(type,
-	                             !!(eventInitDict && eventInitDict.bubbles),
-	                             !!(eventInitDict && eventInitDict.cancelable),
-	                             (eventInitDict ? eventInitDict.details : null));
-	    return newEvent;
+	  window.CustomEvent = function(eventName, eventInitDict) {
+	  	var newEvent;
+
+	  	customEvents.push(eventName);
+
+	  	if (typeof window.createEvent === 'function') {
+	  		newEvent = document.createEvent('CustomEvent');
+	  		newEvent.initCustomEvent(eventName,
+	  		                         !!(eventInitDict && eventInitDict.bubbles),
+	  		                         !!(eventInitDict && eventInitDict.cancelable),
+	  		                         (eventInitDict ? eventInitDict.details : null));
+	  		return newEvent;
+	  	} else {
+	  		document.documentElement['eventProperty' + eventName] = false;
+	  	}
 	  };
 	}
 
 	var kko = exports.kko = function () {
 		// 내부 변수 선언
-		var app         = {},
-		    status      = {},
-		    baseUrl     = 'storylink://posting?',
-		    apiver      =  '1.0',
-		    store       = {
+		var app           = {},
+		    status        = {},
+		    baseUrl       = 'storylink://posting?',
+		    apiver        =  '1.0',
+		    store         = {
 		    	android: 'market://details?id=com.kakao.story',
 		    	ios: 'http://itunes.apple.com/app/id486244601'
 		    },
-			  packageName = 'com.kakao.story',
-			  isInit      = false,
-		    $emit       = document.dispatchEvent,
-				$on         = document.addEventListener;
+			  packageName   = 'com.kakao.story',
+			  isInit        = false,
+			  isEvtListener = typeof document.addEventListener === 'function' ? true : false;
+
+		// 임의의 이벤트를 발생시키는 내부 함수
+		var $emit = function (event, name) {
+			if (typeof document.dispatchEvent === 'function') {
+				document.dispatchEvent(event);
+			} else {
+				document.documentElement['eventProperty' + name] = true;			
+			}
+		};
+
+		// 리스너 함수
+		var $on = function (targetObject, eventName, callBackFunction) {
+			if (isEvtListener === true) {
+				targetObject.addEventListener(eventName, callBackFunction);
+			} else {
+				if (eventName === 'load') {
+					eventName = 'onreadystatechange';
+				} else if (customEvents.indexOf(eventName) === -1) {
+					eventName = 'on' + eventName;
+				} else {
+					return document.documentElement.attachEvent('onpropertychange', function () {
+						var value = document.documentElement['eventProperty' + eventName];
+						if (value === true) {
+							callBackFunction.call(null);
+						}
+					});
+				}
+
+				targetObject.attachEvent(eventName, callBackFunction);
+			}
+		};
 
 		// Custom Event		    
 		var initEvent   = new CustomEvent('init'),
 		    loginEvent  = new CustomEvent('login');
 
-		$on('init', function () {
+		$on(document, 'init', function () {
 			isInit = true;
-		}, false);
+		});
 
+		// JSON to Query String
 		var serialized = function (params) {
 		  var stripped = [];
 
 		  for (var k in params) {
 		    if (params.hasOwnProperty(k)) {
-		      stripped.push(k + "=" + encodeURIComponent(params[k]));
+		      stripped.push(k + '=' + encodeURIComponent(params[k]));
 		    }
 		  }
 
@@ -50,7 +92,7 @@
 
 		var initialize = function (appId) {
 			Kakao.init(appId);
-			$emit(initEvent);
+			$emit(initEvent, 'init');
 		};
 
 		/**
@@ -67,8 +109,14 @@
 				    script = document.createElement('script');
 
 				script.src = 'https://developers.kakao.com/sdk/js/kakao.min.js';
-				script.addEventListener('load', function () {
-					initialize(appId);
+				$on(script, 'load', function () {
+					if (isEvtListener === true) {
+						initialize(appId);
+					} else {
+						if (script.readyState === 'loaded' || script.readyState === 'complete') {
+							initialize(appId);
+						}
+					}
 				});
 
 				body.insertBefore(script, body.lastChild);
@@ -83,7 +131,7 @@
 		 * @return void
 		 */
 		app.on = function (event, handler) {
-			$on(event, handler);
+			$on(document, event, handler);
 		};
 
 		/**
@@ -117,7 +165,7 @@
 						})
 						.then(function (res) {
 							status.kakaoStoryProfile = res;
-							$emit(loginEvent);
+							$emit(loginEvent, 'login');
 						});
 					});
 
