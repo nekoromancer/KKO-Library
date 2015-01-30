@@ -119,7 +119,14 @@
 					}
 				});
 
-				body.insertBefore(script, body.lastChild);
+				if (body === undefined) {
+					$on(document, 'load', function() {
+						body = document.getElementsByTagName('body')[0];
+						body.insertBefore(script, body.lastChild);
+					});
+				} else {
+					body.insertBefore(script, body.lastChild);
+				}
 			}
 		};
 
@@ -165,13 +172,15 @@
 						})
 						.then(function (res) {
 							status.kakaoStoryProfile = res;
+							status.status = 'connected';
+							
 							$emit(loginEvent, 'login');
+
+							if (successCallback) {
+								successCallback.call(null, obj);
+							}
 						});
 					});
-
-					if (successCallback) {
-						successCallback.call(null, obj);
-					}
 				},
 				fail: function (err) {
 					if (failedCallback) {
@@ -181,9 +190,18 @@
 			});
 		};
 
+		/**
+		 * @description: Kakao 로그아웃 합니다.
+		 *
+		 * @param function successCallback: 로그아웃 성공시 콜백 함수
+		 */
 		app.logout = function (successCallback) {
 			Kakao.Auth.logout(function (res) {
-				successCallback.call(null, res);
+				status.status = false;
+
+				if (successCallback) {
+					successCallback.call(null, res);
+				}
 			});
 		};
 
