@@ -1,7 +1,7 @@
 KKO-Library
 ===========
-**Current Version**: v0.3<br />
-**Last Change**: 2015-01-15
+**Current Version**: v0.21<br />
+**Last Change**: 2015-01-30
 
 간편하게 사용하는 카카오 톡, 스토리 라이브러리 입니다(이하 kko).
 
