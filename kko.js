@@ -1,12 +1,12 @@
 (function (exports) {
 	'use strict';
-	
+
 	// CustomEvent 에서 정의한 이벤트를 배열에 저장합니다.
 	var customEvents = [];
   
   // 브라우저에 CustomEvent 함수가 없을 경우 새로 정의합니다.
 	if (typeof window.CustomEvent !== 'function') {
-	  window.CustomEvent = function(eventName, eventInitDict) {
+	  window.CustomEvent = function (eventName, eventInitDict) {
 	  	var newEvent;
 
 	  	customEvents.push(eventName);
@@ -24,7 +24,7 @@
 	  };
 	}
 
-	var kko = exports.kko = function () {
+	var kko = function (userAgent, web2app) {
 		// 내부 변수 선언
 		var app           = {},
 		    status        = {},
@@ -387,9 +387,9 @@
 
 			  var urlScheme = baseUrl + serialized(params);
 			  var intentURI = 'intent:' + urlScheme + '#Intent;package=' + packageName + ';end;';
-			  var appStoreURL = daumtools.userAgent().os.android ? store.android : store.ios;
+			  var appStoreURL = userAgent().os.android ? store.android : store.ios;
 
-			  daumtools.web2app({
+			  web2app({
 			    urlScheme: urlScheme,
 			    intentURI: intentURI,
 			    storeURL : appStoreURL,
@@ -487,10 +487,45 @@
 		};
 
 		return app;
-	}();
+	}(userAgent, web2app);
 
-	if (typeof window === 'object' && window.kko === undefined) {
-		window.kko = kko;
+	var dependencyError = function(list) {
+		list = list.join(', ');
+
+		throw 'dependency error: module not found(' + list + ')';
+ 	};
+
+	var depList = [];
+
+	if (typeof exports.daumtools !== undefined) {
+		var userAgent = (exports.daumtools.userAgent !== undefined) ? exports.daumtools.userAgent : null,
+				web2app   = (exports.daumtools.web2app !== undefined) ? exports.daumtools.web2app : null;
+
+		if (userAgent === null) {
+			depList.push('userAgent');
+		}
+
+		if (web2app === null) {
+			depList.push('web2app');
+		}
+
+		if (depList.length > 0) {
+			dependencyError(depList);
+		}
+	}
+	else {
+		depList.push('userAgent');
+		depList.push('web2app');
+
+		dependencyError(depList);
 	}
 
-})(window.daumtools = (typeof window.daumtools === 'undefined') ? {} : window.daumtools);
+	if (typeof define === 'function' && define.amd) {
+		define(['kko', 'userAgent', 'web2app', 'exports'], function(kko, userAgent, web2app, exports) {
+			exports.kko = kko;
+		});
+	}
+	else {
+		exports.kko = kko;
+	}
+})(window);
