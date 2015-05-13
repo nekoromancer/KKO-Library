@@ -259,8 +259,8 @@
 			 *    label: 공유할 메세지(필수),
 			 *    image: {
 	     *      src: 공유할 이미지의 경로,
-	     *      width: 공유할 이미지의 폭(70이상, 기본값 300, 단위 px)
-	     *      height: 공유할 이미지의 높이(70이상, 기본값 400, 단위 px)
+	     *      width: 공유할 이미지의 폭(70이상, 기본값 400, 단위 px)
+	     *      height: 공유할 이미지의 높이(70이상, 기본값 300, 단위 px)
 			 *    },
 			 *    webButton: {
 	     *			text: 공유할 링크 버튼에 출력될 메세지,
@@ -271,8 +271,8 @@
 			 */
 			sendLink: function (params) {
 				if (params.image !== undefined) {
-					params.image.width = params.image.width || '300';
-					params.image.height = params.image.height || '400';
+					params.image.width = params.image.width || '400';
+					params.image.height = params.image.height || '300';
 				}
 
 				Kakao.Link.sendTalkLink(params);

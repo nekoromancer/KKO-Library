@@ -20,14 +20,14 @@ git clone https://github.com/nekoromancer/KKO-Library.git
 우측의 Download ZIP을 통해 수동으로 다운로드 할 수 있습니다.
 
 kko는 다음 라이브러리의 종속성을 갖고 있습니다.<br />
-[daumcorp/web2app](https://github.com/daumcorp/web2app)<br />
-[daumcorp/ua_parser](https://github.com/daumcorp/ua_parser)
+[daumcorp/ua_parser](https://github.com/daumcorp/ua_parser)<br />
+[daumcorp/web2app](https://github.com/daumcorp/web2app)
 
 위 두가지 라이브러리는 bower를 이용해 설치한 경우 bower_components 디렉토리에 같이 설치되며, git을 통해 내려받으신 경우 lib 폴더에서 찾으실 수 있습니다.
 
 ```html
-	<script src="your/directory/web2app.js"></script>
 	<script src="your/directory/userAgent.js"></script>
+	<script src="your/directory/web2app.js"></script>
 	<script src="your/directory/kko.js"></script>
 ```
 위의 예제와 같이 kko.js를 포함한 라이브러리를 html에서 로드합니다.
@@ -154,7 +154,7 @@ Kakao 계정으로 로그인 합니다.
 # kko.talk
 ## kko.talk.sendLink(params)
 ### Description
-카카오 톡으로 링크 공유 메세지를 보냅니다. 카카오 톡을 설치할 수 있는 모바일 환경에서만 사용 가능합니다.
+카카오 톡으로 링크 공유 메세지를 보냅니다. 카카오 톡을 설치할 수 있는 모바일 환경에서만 사용 가능합니다. 링크 공유에 사용되는 이미지는 가로, 세로 동일하게 80px 이상이어야 하며, 용량은 500kb 이하로 제한되어 있습니다.
 
 ### Parameters
 **params**: 다음 항목을 갖는 오브젝트 입니다.
@@ -163,8 +163,8 @@ Kakao 계정으로 로그인 합니다.
   label: 공유할 메세지(필수),
   image: {
     src: 공유할 이미지의 경로,
-    width: 공유할 이미지의 폭(70이상, 기본값 300, 단위 px)
-    height: 공유할 이미지의 높이(70이상, 기본값 400, 단위 px)
+    width: 공유할 이미지의 폭(70이상, 기본값 400, 단위 px)
+    height: 공유할 이미지의 높이(70이상, 기본값 300, 단위 px)
   },
   webButton: {
     text: 공유할 링크 버튼에 출력될 메세지,
