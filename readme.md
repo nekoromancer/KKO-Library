@@ -357,8 +357,8 @@ HTML 코딩만으로 카카오 로그인, 카카오 토크 링크 보내기, 카
 					data-height="480"></button>
 ```
 
-**url**: 공유할 URL 주소 입니다.
-**type**: logotype_kr, logotype_en, icon_text, web(버튼 이미지는 [이곳](https://developers.kakao.com/buttons)에 KakaoStory Buttons의 Button Type을 참조)
-**size**: 버튼의 사이즈 입니다. 위 링크의 Button Size를 참조 하시기 바랍니다. type이 web일 경우 size는 없어도 됩니다.
-**width**: 팝업창의 가로 사이즈(px).
+**url**: 공유할 URL 주소 입니다.<br />
+**type**: logotype_kr, logotype_en, icon_text, web(버튼 이미지는 [이곳](https://developers.kakao.com/buttons)에 KakaoStory Buttons의 Button Type을 참조)<br />
+**size**: 버튼의 사이즈 입니다. 위 링크의 Button Size를 참조 하시기 바랍니다. type이 web일 경우 size는 없어도 됩니다.<br />
+**width**: 팝업창의 가로 사이즈(px).<br />
 **height**: 팝업창의 세로 사이즈(px).
