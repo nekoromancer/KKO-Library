@@ -1,6 +1,6 @@
 {
   "name": "KKO",
-  "version": "0.31",
+  "version": "0.5",
   "authors": [
     "nekoromancer <nekonitrate@gmail.com>"
   ],
@@ -12,6 +12,8 @@
   "keywords": [
     "KakaoTalk",
     "kakaoStory",
+    "Kakao Talk",
+    "kakao Story",
     "Daum",
     "Kakao"
   ],

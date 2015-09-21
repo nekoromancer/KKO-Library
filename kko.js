@@ -365,7 +365,7 @@
 			 *   - 카카오 스토리 앱을 호출 합니다.
 			 *   - 카카오 스토리를 사용할 수 있는 모바일 환경에서만 작동합니다.
 			 *
-			 * @param string appId: 공유하는 모바일 웹 사이트의 루트 주소(필수)
+			 * @param string host: 공유하는 모바일 웹 사이트의 Host 주소(필수)
 			 * @param string url: 실제 공유 할 url(필수)
 			 * @param string text: 사용자 입력란에 들어간 임의의 문장
 			 * @param boolean urlFirst: 공유 할 url이 삽입될 위치(기본 false)
@@ -374,9 +374,9 @@
 			 *
 			 * @return void
 			 */
-			openApp: function (appId, url, text, urlFirst) {
+			openApp: function (host, url, text, urlFirst) {
 				var params = {};
-				params.appId = appId;
+				params.appId = host;
 		    params.apiver = apiver;
 
 		    if (urlFirst && urlFist === true) {
@@ -485,6 +485,247 @@
 				});
 			}
 		};
+
+		/**
+		* HTML Kakao Social Buttons
+		*/
+
+		var setBgStyle = function (target, width, height, path) {
+			target.style.width = width + 'px';
+			target.style.height = height + 'px';
+			target.style.backgroundImage = 'url(\'' + path + '\')';
+		};
+
+		var assetPath = 'https://developers.kakao.com/assets/img/about/';
+
+		$on(window, 'load', function () {
+			/**
+			* Login Button
+			*/
+			var loginButtons = document.getElementsByClassName('kko-login-button');
+
+			for (var i = 0, button; button = loginButtons[i]; i++) {
+				var lang = button.getAttribute('data-lang'),
+						text = button.getAttribute('data-text'),
+						size = button.getAttribute('data-size'),
+						imgPath = assetPath + 'logos/login/';
+
+				button.style.backgroundColor = 'transparent';
+				button.style.backgroundRepeat = 'no-repeat';
+				button.style.border = 'none';
+				button.style.cursor = 'pointer';
+
+				if (lang === 'kr') {
+					imgPath += 'kr/';
+				}
+				else if (lang === 'en') {
+					imgPath += 'en/';
+				}
+
+				if (text === 'short') {
+					imgPath += 'kakao_login_btn_';
+
+					if (size === 'small') {
+						imgPath += 'small.png';
+
+						setBgStyle(button, 70, 31, imgPath);
+					}
+					else if (size === 'medium') {
+						imgPath += 'medium.png';
+
+						setBgStyle(button, 121, 49, imgPath);
+					}
+					else if (size === 'large') {
+						imgPath += 'large.png';
+
+						setBgStyle(button, 249, 98, imgPath);
+					}
+				}
+				else if (text === 'long') {
+					imgPath += 'kakao_account_login_btn_';
+
+					if (size === 'medium-narrow') {
+						imgPath += 'medium_narrow.png';
+
+						setBgStyle(button, 222, 49, imgPath);
+					}
+					else if (size === 'medium-wide') {
+						imgPath += 'medium_wide.png';
+
+						setBgStyle(button, 300, 49, imgPath);
+					}
+					else if (size === 'large-narrow') {
+						imgPath += 'large_narrow.png';
+
+						setBgStyle(button, 452, 98, imgPath);
+					}
+					else if (size === 'large-wide') {
+						imgPath += 'large_wide.png';
+
+						setBgStyle(button, 600, 98, imgPath);
+					}
+				}
+
+				$on(button, 'click', app.login);
+			}
+		});
+
+		$on(window, 'load', function () {
+			/**
+			* Kakao Talk Send Link Button
+			*/
+
+			var kakaoTalkLinkButton = document.getElementsByClassName('kko-talk-link-button');
+			var sendLinkHandler = function (params) {
+				return function () {
+					Kakao.Link.sendTalkLink(params);
+				};
+			};
+
+			for (var i = 0, button; button = kakaoTalkLinkButton[i]; i++) {
+				var label   = button.getAttribute('data-label'),
+						src     = button.getAttribute('data-src'),
+						width   = button.getAttribute('data-width'),
+						height  = button.getAttribute('data-height'),
+						text    = button.getAttribute('data-text'),
+						url     = button.getAttribute('data-url'),
+						size    = button.getAttribute('data-size'),
+						imgPath = assetPath + 'logos/kakaolink/kakaolink_btn_',
+						params  = {};
+
+				button.style.backgroundColor = 'transparent';
+				button.style.backgroundRepeat = 'no-repeat';
+				button.style.border = 'none';
+				button.style.cursor = 'pointer';
+
+				params.label = label;
+
+				if (src) {
+					params.image = {};
+					params.image.src = src;
+					params.image.width = width || '400';
+					params.image.height = height || '300';
+				}
+
+				if (text || url) {
+					params.webButton = {};
+
+					if (text) {
+						params.webButton.text = text;
+					}
+
+					if (url) {
+						params.webButton.url = url;
+					}
+				}
+
+				if (size === 'small') {
+					imgPath += 'small.png';
+
+					setBgStyle(button, 34, 35, imgPath);
+				}
+				else if (size === 'medium') {
+					imgPath += 'medium.png';
+
+					setBgStyle(button, 68, 69, imgPath);
+				}
+
+				var handler = sendLinkHandler(params);
+
+				$on(button, 'click', handler);
+				handler = null;
+			}
+		});
+
+		$on(window, 'load', function () {
+			/**
+			* Kakao Story Share Button
+			*/
+
+			var kakaoStoryShare = document.getElementsByClassName('kko-story-share-button');
+			var shareHandler = function (url, width, height) {
+				return function () {
+					app.story.openSharer(url, width, height);
+				};
+			};
+
+			for (var i = 0, button; button = kakaoStoryShare[i]; i++) {
+				var url       = button.getAttribute('data-url'),
+						type      = button.getAttribute('data-type'),
+						size      = button.getAttribute('data-size'),
+						btnWidth  = '',
+						width     = button.getAttribute('data-width'),
+						height    = button.getAttribute('data-height'),
+						imgPath   = assetPath + 'buttons/kakaostory/button/';
+
+				var handler = shareHandler(url, width, height);
+
+				if (type === 'logotype_kr' || type === 'logotype_en') {
+					imgPath += 'logotype/';
+
+					if (type === 'logotype_kr') {
+						imgPath += 'kr/story_logotype_kr_' + size + '.png';
+					}
+					else if (type === 'logotype_en') {
+						imgPath += 'en/story_logotype_en_' + size + '.png';
+					}
+
+					switch (size) {
+						case '64':
+							btnWidth = 222;
+							break;
+
+						case '96':
+							btnWidth = 333;
+							break;
+
+						case '128':
+							btnWidth = 444;
+							break;
+
+						case '256':
+							btnWidth = 888;
+							break;
+					}
+				}
+				else if (type === 'icon_text') {
+					imgPath += 'icon_text/story_icon_text_' + size + '.png';
+
+					switch (size) {
+						case '64':
+							btnWidth = 338;
+							break;
+
+						case '96':
+							btnWidth = 507;
+							break;
+
+						case '128':
+							btnWidth = 676;
+							break;
+
+						case '256':
+							btnWidth = 1352;
+							break;
+					}
+				}
+				else if (type === 'web') {
+					imgPath += 'web/kakaostory_web_56x20.png';
+					size = 20;
+					btnWidth = 56;
+				}
+
+				button.style.backgroundColor = 'transparent';
+				button.style.backgroundRepeat = 'no-repeat';
+				button.style.border = 'none';
+				button.style.cursor = 'pointer';
+
+				setBgStyle(button, btnWidth, parseInt(size), imgPath);
+
+				$on(button, 'click', handler);
+				handler = null;
+			}
+		});
 
 		return app;
 	}(userAgent, web2app);

@@ -1,7 +1,7 @@
 KKO-Library
 ===========
-**Current Version**: v0.31<br />
-**Last Change**: 2015-05-13
+**Current Version**: v0.5<br />
+**Last Change**: 2015-09-21
 
 간편하게 사용하는 카카오 톡, 스토리 라이브러리 입니다(이하 kko).
 
@@ -216,12 +216,12 @@ Kakao 계정으로 로그인 합니다.
 **width**: 팝업창 너비(px), 기본 값은 400px 입니다(옵션)<br />
 **height**: 팝업창 높이(px), 기본 값을 480px 입니다(옵션)
 
-## kko.story.openApp(appId, url, text, urlFirst)
+## kko.story.openApp(host, url, text, urlFirst)
 ### Description
 카카오 스토리에 url 링크를 공유합니다. 카카오 스토리 앱을 호출하며 카카오 스토리 앱을 사용할 수 있는 모바일 환경에서만 동작합니다.
 
 ### Parameters
-**appId**: 공유하는 웹 사이트의 최상위 도메인(필수, 개발자 페이지에서 등록하는 appId가 아닙니다)<br />
+**host**: 공유하는 웹 사이트의 최상위 도메인(필수)<br />
 **url**: 공유할 모바일 웹사이트 주소(필수)<br />
 **text**: 사용자 입력란에 들어갈 텍스트 내용(옵션)<br />
 **urlFirst**: 공유할 url이 삽입될 위치입니다. 기본값을 false입니다(옵션). true일 경우 url + text 형태가 되며, false 일경우 text + url 이 됩니다.
@@ -232,11 +232,11 @@ Kakao 계정으로 로그인 합니다.
 		openSharer = document.getElementById('button-open-sharer'),
 		openApp    = document.getElementById('button-open-app'),
 		url        = 'http://www.example.com/article/1',
-		appId      = 'http://www.example.com',
+		host       = 'http://www.example.com',
 		text       = '칼퇴를 부르고 야근을 무찌르는 방법!';
 		
 	sendLink.addEventListener('click', function () {
-		// 별로의 공유창을 띄우지 않고 url과 text를 공유하기
+		// 별도의 공유창을 띄우지 않고 url과 text를 공유하기
 		kko.story.sendLink(
 			url, 
 			text,
@@ -304,3 +304,61 @@ id를 지정하지 않은 경우 생략됩니다.
 **lastId**: 카카오 스토리의 스토리 ID입니다. <br />
 **successCallback**: 스토리 정보 불러오기 성공시 콜백 함수. 스토리 정보가 첫번째 파라미터로 전달됩니다. <br />
 **failedCallback**: 스토리 정보 불러오기 실패시 콜백 함수.
+
+# kko HTML Buttons
+## Description
+HTML 코딩만으로 카카오 로그인, 카카오 토크 링크 보내기, 카카오 스토리 공유 버튼을 쉽게 만들 수 있습니다. 이하 항목명들은 HTML tag의 class 이름입니다.
+
+### kko-login-button
+로그인 버톤을 생성합니다.
+
+```html
+<button class="kko-login-button" 
+				data-lang="kr" 
+				data-text="long" 
+				data-size="large-narrow"></button>
+```
+**lang**: 로그인 버튼의 언어 입니다(kr, en). <br/>
+**text**: long 일때는 '카카오 계정으로 로그인', short 일때는 '로그인'으로 버튼 텍스트가 표시됩니다.
+**size**: 버튼의 사이즈를 지정합니다. size 값은 [이곳](https://developers.kakao.com/buttons)의 Login Buttons 항목에서 확인할 수 있습니다.<br />
+
+### kko-talk-link-button
+[카카오 링크 보내기](#kkotalksendlinkparams) 버튼을 생성합니다.
+
+```html
+<button class="kko-talk-link-button"
+				data-label="Kakao Talk Link"
+				data-src="https://www.some-image-path.com/image.png"
+				data-width="400"
+				data-height="300"
+				data-text="Link Button"
+				data-url="https://www.example.com"
+				data-size="medium"></button>
+```
+각각의 항목은 [kko.talk.sendLink()](#kkotalksendlinkparams) 함수의 매개 변수와 1:1 대응합니다.
+
+**label**: label <br/>
+**src**: image.src <br/>
+**width**: image.width <br/>
+**height**: image.height <br/>
+**text**: webButton.text <br/>
+**url**: webButton.url <br />
+**size**: 버튼 크기로 medium(68px x 69px)과 small(34px x 35px) 두 종류입니다.
+
+### kko-story-icon
+[카카오 스토리에 공유하기](##kkostoryopensharerurl-width-height) 팝업 버튼을 생성합니다.
+
+```html
+	<button class="kko-story-share-button"
+					data-url="http://www.example.com"
+					data-type="logotype_kr"
+					data-size="64"
+					data-width="400"
+					data-height="480"></button>
+```
+
+**url**: 공유할 URL 주소 입니다.
+**type**: logotype_kr, logotype_en, icon_text, web(버튼 이미지는 [이곳](https://developers.kakao.com/buttons)에 KakaoStory Buttons의 Button Type을 참조)
+**size**: 버튼의 사이즈 입니다. 위 링크의 Button Size를 참조 하시기 바랍니다. type이 web일 경우 size는 없어도 됩니다.
+**width**: 팝업창의 가로 사이즈(px).
+**height**: 팝업창의 세로 사이즈(px).
