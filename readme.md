@@ -319,7 +319,7 @@ HTML 코딩만으로 카카오 로그인, 카카오 토크 링크 보내기, 카
 				data-size="large-narrow"></button>
 ```
 **lang**: 로그인 버튼의 언어 입니다(kr, en). <br/>
-**text**: long 일때는 '카카오 계정으로 로그인', short 일때는 '로그인'으로 버튼 텍스트가 표시됩니다.
+**text**: long 일때는 '카카오 계정으로 로그인', short 일때는 '로그인'으로 버튼 텍스트가 표시됩니다.<br/>
 **size**: 버튼의 사이즈를 지정합니다. size 값은 [이곳](https://developers.kakao.com/buttons)의 Login Buttons 항목에서 확인할 수 있습니다.<br />
 
 ### kko-talk-link-button
