@@ -173,17 +173,20 @@
 						.then(function (res) {
 							status.kakaoStoryProfile = res;
 							status.status = 'connected';
-							
-							$emit(loginEvent, 'login');
 
-							if (successCallback) {
+							if (typeof successCallback !== 'undefined') {
+								$emit(loginEvent, 'login');
 								successCallback.call(null, obj);
+							}
+							else {
+								loginEvent.userProfile = obj;
+								$emit(loginEvent, 'login');
 							}
 						});
 					});
 				},
 				fail: function (err) {
-					if (failedCallback) {
+					if (typeof failedCallback !== 'undefined') {
 						failedCallback.call(null, err);
 					}
 				}
@@ -199,7 +202,7 @@
 			Kakao.Auth.logout(function (res) {
 				status.status = false;
 
-				if (successCallback) {
+				if (typeof successCallback !== 'undefined') {
 					successCallback.call(null, res);
 				}
 			});
@@ -324,13 +327,13 @@
 							});
 						})
 						.then(function (res) {
-							if (successCallback) {
+							if (typeof successCallback !== undefined) {
 								successCallback.call(null, res);	
 							}
 						});
 					},
 					fail: function(err) {
-						if (failedCallback) {
+						if (typeof failedCallback !== undefined) {
 							failedCallback.call(null, err);
 						}
 					}
@@ -446,11 +449,15 @@
 					success: function () {
 						Kakao.API.request(params)
 						.then(function (res) {
-							successCallback.call(null, res);
+							if (typeof successCallback !== 'undefined') {
+								successCallback.call(null, res);	
+							}
 						});
 					},
 					fail: function (err) {
-						failedCallback.call(null, err);
+						if (typeof failedCallback !== 'undefined') {
+							failedCallback.call(null, err);
+						}
 					}
 				});
 			},
@@ -476,11 +483,15 @@
 							}
 						})
 						.then(function (res) {
-							successCallback.call(null, res);
+							if (typeof successCallback !== 'undefined') {
+								successCallback.call(null, res);
+							}
 						});
 					},
 					fail: function (err) {
-						failedCallback.call(null, err);
+						if (typeof failedCallback !== 'undefined') {
+							failedCallback.call(null, err);
+						}
 					}
 				});
 			}
@@ -503,6 +514,11 @@
 			* Login Button
 			*/
 			var loginButtons = document.getElementsByClassName('kko-login-button');
+			var loginHandler = function () {
+				return function () {
+					app.login();
+				};
+			};
 
 			for (var i = 0, button; button = loginButtons[i]; i++) {
 				var lang = button.getAttribute('data-lang'),
@@ -566,7 +582,9 @@
 					}
 				}
 
-				$on(button, 'click', app.login);
+				var handler = loginHandler();
+
+				$on(button, 'click', handler);
 			}
 		});
 
@@ -653,7 +671,7 @@
 				var url       = button.getAttribute('data-url'),
 						type      = button.getAttribute('data-type'),
 						size      = button.getAttribute('data-size'),
-						btnWidth  = '',
+						btnWidth  = 0,
 						width     = button.getAttribute('data-width'),
 						height    = button.getAttribute('data-height'),
 						imgPath   = assetPath + 'buttons/kakaostory/button/';

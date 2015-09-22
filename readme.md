@@ -310,7 +310,7 @@ id를 지정하지 않은 경우 생략됩니다.
 HTML 코딩만으로 카카오 로그인, 카카오 토크 링크 보내기, 카카오 스토리 공유 버튼을 쉽게 만들 수 있습니다. 이하 항목명들은 HTML tag의 class 이름입니다.
 
 ### kko-login-button
-로그인 버톤을 생성합니다.
+로그인 버톤을 생성합니다. 로그인 시 login 이벤트가 발생하며 이벤트 객체의 userInfo에 로그인 정보를 전달합니다.
 
 ```html
 <button class="kko-login-button" 
