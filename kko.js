@@ -18,7 +18,8 @@
 	  		                         !!(eventInitDict && eventInitDict.cancelable),
 	  		                         (eventInitDict ? eventInitDict.details : null));
 	  		return newEvent;
-	  	} else {
+	  	} 
+	  	else {
 	  		document.documentElement['eventProperty' + eventName] = false;
 	  	}
 	  };
@@ -29,7 +30,7 @@
 		var app           = {},
 		    status        = {},
 		    baseUrl       = 'storylink://posting?',
-		    apiver        =  '1.0',
+		    apiver        = '1.0',
 		    store         = {
 		    	android: 'market://details?id=com.kakao.story',
 		    	ios: 'http://itunes.apple.com/app/id486244601'
@@ -42,7 +43,8 @@
 		var $emit = function (event, name) {
 			if (typeof document.dispatchEvent === 'function') {
 				document.dispatchEvent(event);
-			} else {
+			} 
+			else {
 				document.documentElement['eventProperty' + name] = true;			
 			}
 		};
@@ -51,12 +53,15 @@
 		var $on = function (targetObject, eventName, callBackFunction) {
 			if (isEvtListener === true) {
 				targetObject.addEventListener(eventName, callBackFunction);
-			} else {
+			} 
+			else {
 				if (eventName === 'load') {
 					eventName = 'onreadystatechange';
-				} else if (customEvents.indexOf(eventName) === -1) {
+				} 
+				else if (customEvents.indexOf(eventName) === -1) {
 					eventName = 'on' + eventName;
-				} else {
+				} 
+				else {
 					return document.documentElement.attachEvent('onpropertychange', function () {
 						var value = document.documentElement['eventProperty' + eventName];
 						if (value === true) {
@@ -112,7 +117,8 @@
 				$on(script, 'load', function () {
 					if (isEvtListener === true) {
 						initialize(appId);
-					} else {
+					} 
+					else {
 						if (script.readyState === 'loaded' || script.readyState === 'complete') {
 							initialize(appId);
 						}
@@ -124,7 +130,8 @@
 						body = document.getElementsByTagName('body')[0];
 						body.insertBefore(script, body.lastChild);
 					});
-				} else {
+				} 
+				else {
 					body.insertBefore(script, body.lastChild);
 				}
 			}
@@ -218,7 +225,8 @@
 			status: function () {
 				if (status.status === 'connected') {
 					return true;
-				} else {
+				} 
+				else {
 					return false;
 				}
 			},
@@ -246,7 +254,8 @@
 					});
 					
 					return user;
-				} else {
+				} 
+				else {
 					return false;
 				}
 			}
@@ -345,22 +354,15 @@
 			 *   - 공유를 위한 새로운 윈도우 창이 생성됩니다.
 			 *
 			 * @param string url: 공유할 url 
-			 * @param number width: 팝업창의 폭(기본 400, 단위 px)
-			 * @param number height: 팝업창의 높이(기본 480, 단위 px)
-			 *   - 콜백 함수의 첫번째 인수로 링크된 게시물의 상세 정보가 전달됩니다.
-			 * @param function failedCallback: 공유 실패시 콜백 함수
+			 * @param string text: 사용자 입력란에 들어간 내용
 			 *
 			 * @return void
 			 */
-			openSharer: function (url, width, height) {
-				var linkUrl = 'https://story.kakao.com/share?url=%url';
-				url = encodeURIComponent(url);
-				width = width || 400;
-				height = height || 480;
-				
-				linkUrl = linkUrl.replace(/%url/, url);
-
-				window.open(linkUrl, '', 'width=' + width + ',height=' + height);
+			openSharer: function (url, text) {
+				Kakao.Story.share({
+					url: url,
+					text: text
+				});
 			},
 
 			/**
@@ -493,6 +495,28 @@
 							failedCallback.call(null, err);
 						}
 					}
+				});
+			},
+
+			/**
+			 * @description: 카카오 스토리 팔로잉 버튼을 생성합니다.
+			 *
+			 * @param string container: 컨테이너 DOM id
+			 * @param string storyId: 카카오 스토리 스토리 이름
+			 * @param boolean showFollowerCounter: 팔로워 수 표시 여부(기본 true)
+			 * @param string type: 팔로워 수 표시 위치(horizontal(기본), vertical)
+			 *
+			 * @return void
+			 */
+			followStory: function (container, storyId, showFollowerCount, type) {
+				showFollowerCount = showFollowerCount || true;
+				type = type || 'horizontal';
+
+				Kakao.Story.createFollowButton({
+					container: container,
+					id: storyId,
+					showFollowerCount: showFollowerCount,
+					type: type
 				});
 			}
 		};
@@ -661,9 +685,9 @@
 			*/
 
 			var kakaoStoryShare = document.getElementsByClassName('kko-story-share-button');
-			var shareHandler = function (url, width, height) {
+			var shareHandler = function (url, text) {
 				return function () {
-					app.story.openSharer(url, width, height);
+					app.story.openSharer(url, text);
 				};
 			};
 
@@ -672,11 +696,10 @@
 						type      = button.getAttribute('data-type'),
 						size      = button.getAttribute('data-size'),
 						btnWidth  = 0,
-						width     = button.getAttribute('data-width'),
-						height    = button.getAttribute('data-height'),
+						text      = button.getAttribute('data-text'),
 						imgPath   = assetPath + 'buttons/kakaostory/button/';
 
-				var handler = shareHandler(url, width, height);
+				var handler = shareHandler(url, text);
 
 				if (type === 'logotype_kr' || type === 'logotype_en') {
 					imgPath += 'logotype/';
@@ -742,6 +765,30 @@
 
 				$on(button, 'click', handler);
 				handler = null;
+			}
+		});
+
+		$on(window, 'load', function () {
+			/**
+			* Kakao Story Follow Button
+			*/
+
+			var followButtons = document.getElementsByClassName('kko-follow-story');
+
+			for (var i = 0, button; button = followButtons[i]; i++) {
+				var story   = button.getAttribute('data-story'),
+						counter = button.getAttribute('data-counter') || true,
+						type    = button.getAttribute('data-type') || 'horizontal',
+						domId   = button.getAttribute('id');
+
+				if (counter === 'true') {
+					counter = true;
+				}
+				else if(counter === 'false') {
+					counter = false;
+				}
+
+				app.story.followStory('#' + domId, story, counter, type);
 			}
 		});
 

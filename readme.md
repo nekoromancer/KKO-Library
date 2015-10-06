@@ -1,7 +1,7 @@
 KKO-Library
 ===========
-**Current Version**: v0.5<br />
-**Last Change**: 2015-09-21
+**Current Version**: v0.6<br />
+**Last Change**: 2015-10-06
 
 간편하게 사용하는 카카오 톡, 스토리 라이브러리 입니다(이하 kko).
 
@@ -207,14 +207,13 @@ Kakao 계정으로 로그인 합니다.
 **success**: 공유 성공시 콜백 함수. 콜백 함수의 첫번째 인수로 게시된 게시물의 상세 정보가 전달됩니다.<br />
 **failed**: 공유 실패시 콜백 함수
 
-## kko.story.openSharer(url, width, height)
+## kko.story.openSharer(url, text)
 ### Description
 카카오 스토리에 url 링크를 공유합니다. 공유 팝업창이 생성됩니다.
 
 ### Parameters
 **url**: 공유할 url(필수)<br />
-**width**: 팝업창 너비(px), 기본 값은 400px 입니다(옵션)<br />
-**height**: 팝업창 높이(px), 기본 값을 480px 입니다(옵션)
+**text**: 사용자 입력란에 들어갈 텍스트 내용<br />
 
 ## kko.story.openApp(host, url, text, urlFirst)
 ### Description
@@ -305,6 +304,24 @@ id를 지정하지 않은 경우 생략됩니다.
 **successCallback**: 스토리 정보 불러오기 성공시 콜백 함수. 스토리 정보가 첫번째 파라미터로 전달됩니다. <br />
 **failedCallback**: 스토리 정보 불러오기 실패시 콜백 함수.
 
+## kko.story.followStory(container, storyName, showFollowCounter, type)
+### Description
+카카오 스토리의 스토리 팔로우 버튼을 생성합니다.
+
+### Parameters
+**container**: 버튼 컨테이너 엘레먼트<br />
+**storyName**: 카카오 스토리의 스토리 이름<br />
+**showFollowCounter**: 팔로워 수 표시 여부(true / false). 기본값 true<br />
+**type**: 팔로워 수 표시 위치(horizontal, vertical). 기본값 horizontal
+
+### Example
+```html
+	<div id="follow-button"></div>
+```
+```javascript
+	kko.story.followStory('#follow-button', 'kakaostory', true, 'vertical');
+```
+
 # kko HTML Buttons
 ## Description
 HTML 코딩만으로 카카오 로그인, 카카오 토크 링크 보내기, 카카오 스토리 공유 버튼을 쉽게 만들 수 있습니다. 이하 항목명들은 HTML tag의 class 이름입니다.
@@ -345,20 +362,34 @@ HTML 코딩만으로 카카오 로그인, 카카오 토크 링크 보내기, 카
 **url**: webButton.url <br />
 **size**: 버튼 크기로 medium(68px x 69px)과 small(34px x 35px) 두 종류입니다.
 
-### kko-story-icon
-[카카오 스토리에 공유하기](##kkostoryopensharerurl-width-height) 팝업 버튼을 생성합니다.
+### kko-story-share
+[카카오 스토리에 공유하기](#kkostoryopensharerurl-width-height) 팝업 버튼을 생성합니다.
 
 ```html
 	<button class="kko-story-share-button"
 					data-url="http://www.example.com"
 					data-type="logotype_kr"
 					data-size="64"
-					data-width="400"
-					data-height="480"></button>
+					data-text="example text"></button>
 ```
 
 **url**: 공유할 URL 주소 입니다.<br />
 **type**: logotype_kr, logotype_en, icon_text, web(버튼 이미지는 [이곳](https://developers.kakao.com/buttons)에 KakaoStory Buttons의 Button Type을 참조)<br />
 **size**: 버튼의 사이즈 입니다. 위 링크의 Button Size를 참조 하시기 바랍니다. type이 web일 경우 size는 없어도 됩니다.<br />
-**width**: 팝업창의 가로 사이즈(px).<br />
-**height**: 팝업창의 세로 사이즈(px).
+**text**: 사용자 입력란에 들어갈 텍스트
+
+### kko-follow-story
+카카오 스토리의 스토리 팔로우 버튼을 생성합니다. 이 엘레먼트는 반드시 id를 가져야 하며, block 엘레먼트로 생성할 것을 권장합니다.
+
+```html
+	<div class="kko-follow-story"
+			 id="kko-follow-button"
+			 data-story="kakaostory"
+			 data-counter="true"
+			 data-type="horizontal"></div>
+
+```
+
+**story**: 팔로우 할 스토리의 이름<br />
+**counter**: 팔로워 수 표시 여부(true / false). 기본값 true<br />
+**type**: 팔로워 수 표시 위치(horizontal, vertical). 기본값 horizontal
