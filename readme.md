@@ -1,9 +1,15 @@
 KKO-Library
 ===========
-**Current Version**: v0.6<br />
-**Last Change**: 2015-10-06
+**Current Version**: v1.0<br />
+**Last Change**: 2016-04-08
+```
+v1.0 Change Logs
+ - 크로스 브라우징 이슈 관련 버그 픽싱
+ - 종속성 있는 라이브러리를 소스에 포함
+ - 기타 사소한 버그 및 코드 리펙토링
+```
 
-간편하게 사용하는 카카오 톡, 스토리 라이브러리 입니다(이하 kko).
+간편하게 사용하는 카카오 톡, 스토리 라이브러리 입니다(이하 kko). IE >= 9 과 그외 최신 브라우저에서 동작합니다.
 
 # 설치
 
@@ -19,15 +25,9 @@ git clone https://github.com/nekoromancer/KKO-Library.git
 
 우측의 Download ZIP을 통해 수동으로 다운로드 할 수 있습니다.
 
-kko는 다음 라이브러리의 종속성을 갖고 있습니다.<br />
-[daumcorp/ua_parser](https://github.com/daumcorp/ua_parser)<br />
-[daumcorp/web2app](https://github.com/daumcorp/web2app)
-
 위 두가지 라이브러리는 bower를 이용해 설치한 경우 bower_components 디렉토리에 같이 설치되며, git을 통해 내려받으신 경우 lib 폴더에서 찾으실 수 있습니다.
 
 ```html
-	<script src="your/directory/userAgent.js"></script>
-	<script src="your/directory/web2app.js"></script>
 	<script src="your/directory/kko.js"></script>
 ```
 위의 예제와 같이 kko.js를 포함한 라이브러리를 html에서 로드합니다.
