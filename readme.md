@@ -25,8 +25,6 @@ git clone https://github.com/nekoromancer/KKO-Library.git
 
 우측의 Download ZIP을 통해 수동으로 다운로드 할 수 있습니다.
 
-위 두가지 라이브러리는 bower를 이용해 설치한 경우 bower_components 디렉토리에 같이 설치되며, git을 통해 내려받으신 경우 lib 폴더에서 찾으실 수 있습니다.
-
 ```html
 	<script src="your/directory/kko.js"></script>
 ```
